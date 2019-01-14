@@ -1,9 +1,9 @@
 # JFiK_zaliczenie
 
 Repozytorium składa się z trzech folderów
-folder z61c dotyczy zadania 6.1c z listy zadań dr inż. Jankowskiej
-folder z61d dotyczy zadania 6.1d z listy zadań dr inż. Jankowskiej
-folder interpreter dotyczy zadania Intrepretera dr inż. Dutkiewicza
+- folder z61c dotyczy zadania 6.1c z listy zadań dr inż. Jankowskiej
+- folder z61d dotyczy zadania 6.1d z listy zadań dr inż. Jankowskiej
+- folder interpreter dotyczy zadania Intrepretera dr inż. Dutkiewicza
 
 # Kompilacja
 Każdy folder posiada skrypt Makefile kompilujący projekty na systemach Linux i Macos, jednakże można je skompilować ręcznie przy użyciu następujących komend:
