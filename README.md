@@ -43,6 +43,13 @@ WIERSZFLOAT -> PRZERWA FLOAT | WIERSZFLOAT PRZERWA FLOAT
 WIERSZ -> WIERSZDEC | WIERSZHEX | WIERSZFIXED | WIERSZFLOAT
 ```
 
+# Działanie poszczególnych programów
+- zadania 6.1c/6.1d
+Przy pomocy połączenia narzędzi flex i bison można było rozdzielić analizę na część leksykalną i gramatyczną. Część leksykalna na podstawie wyrażeń regularnych analizuje tekst i wskazuje gramatyczne tokeny do narzędzia bison. Część gramatyczna opisuje w jaki sposób te tokeny powinny występować w składni. Po rozpoznaniu całego wiersza sumowane są wartości poszczególnych elementów a wynik podawany jest na standardowe wyjście.  
+
+- zadanie interpreter
+Podobnie jak w poprzednim zadaniu wykorzystane zostały narzędzia flex i bison, a cały program został napisany w języku C++ ze względu na dostęp do kontenerów takich jak np std::vector, które znacznie ułatwiały stworzenie interpretera. W trakcie analizy podanego kodu tworzone są tak zwane operacje (klasa OPERATION) zawierające informacje typie operacji (np printowanie tekstu na standardowe wyjście) oraz argumentach (struktura E_STRUCT). Budowa struktury E_STRUCT mocno czerpie inspirację z podanej w przykładowym kodzie dołączonym do treści zadania tokenie E. Token E zajmuje się obliczaniem wartości liczbowych całkowitych poprzez dodawanie, odejmowanie, mnożenie i dzielenie dosłownych wartości liczbowych lub zmiennych. Po zakończonej analizie wyżej opisane operacje są wykonywane. W przypadkach takich jak np. pętla WHILE wartości argumentów (E_STRUCT) są obliczane od nowa po każdym wykonaniu kroku, aby upewnić się, że warunek pętli wciąż jest spełniany. 
+
 # Kompilacja
 Każdy folder posiada skrypt Makefile kompilujący projekty na systemach Linux i MacOS, jednakże można je skompilować ręcznie przy użyciu następujących komend:
 - zadania z61c i z61d:
