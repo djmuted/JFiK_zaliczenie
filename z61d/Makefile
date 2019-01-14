@@ -4,10 +4,10 @@ all:
 	gcc lex.yy.c
 
 grammar:
-	/usr/local/opt/bison/bin/bison grammar.y
+	bison grammar.y
 
 lex:
-	/usr/local/opt/flex/bin/flex lex.l
+	flex lex.l
 
 test:
 	${MAKE} all
