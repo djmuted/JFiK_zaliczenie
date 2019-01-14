@@ -66,20 +66,24 @@ Do interpretera należy na wejściu podać cały plik np:
 
 # Użycie
 - zadania 6.1c i 6.1d można sprawdzić poprzez przekazanie na wejście pliku testowego (przykładowe dane testowe są podane w pliku dane.txt)
-- Dla systemów Linux/MacOS (skrypt Makefile zajmuje się kompilacją i wykonuje program dla testowego wejścia dane.txt)
+
+Dla systemów Linux/MacOS (skrypt Makefile zajmuje się kompilacją i wykonuje program dla testowego wejścia dane.txt)
 ```
 make testdane
 ```
-- Dla systemów Windows
+
+Dla systemów Windows
 ```
 a.exe < dane.txt
 ```
 - zadanie z interpreterem można sprawdzić w analogiczny sposób podając na wejściu program (przykładowy program jest podany w pliku program.txt)
-- Dla systemów Linux/MacOS (skrypt Makefile zajmuje się kompilacją i wykonuje program dla testowego wejścia program.txt)
+
+Dla systemów Linux/MacOS (skrypt Makefile zajmuje się kompilacją i wykonuje program dla testowego wejścia program.txt)
 ```
 make testdane
 ```
-- Dla systemów Windows
+
+Dla systemów Windows
 ```
 a.exe < program.txt
 ```
