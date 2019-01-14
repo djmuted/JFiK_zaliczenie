@@ -1,0 +1,13 @@
+aaa=500;
+bbb=200;
+ccc=200;
+ccc=300;
+IF aaa > bbb PRINT 2137;
+IF bbb >= ccc PRINT 5000;
+zzz=500;
+xxx=500;
+IF zzz==xxx zzz=9999;
+PRINT zzz;
+i=3;
+WHILE i>0 i-- PRINT i;
+PRINT aaa+bbb+ccc;
