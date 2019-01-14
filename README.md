@@ -12,6 +12,8 @@ Repozytorium składa się z trzech folderów
 ```
 - zadanie 6.1b
 ```
+Symbol startowy: PLIK
+
 NL -> '\n' | '\r' '\n'
 SP -> ' '
 TAB -> '\t'
