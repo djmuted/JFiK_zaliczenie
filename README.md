@@ -21,4 +21,4 @@ Do interpretera należy na wejściu podać cały plik np:
 
 dla systemów Linux/MacOS: `./a.out < program.txt `
 
-dla systemów Windows: `a.exe < program.txt``
+dla systemów Windows: `a.exe < program.txt`
