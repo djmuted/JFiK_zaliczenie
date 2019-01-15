@@ -1,89 +1,107 @@
 %{
-	#include <stdio.h>
-	#include <string.h>
-	#include <cstdlib>
+    #include <stdio.h>
+    #include <string.h>
+    #include <cstdlib>
     #include <vector>
     #include <string>
     #include <iostream>
-	void yyerror(char*);
-	int yylex();
-	int liczbaZmiennych = 0;
-	std::vector<std::string> zmienne;
-	std::vector<int> wartosci;
-	int indeksZmiennej(char * nazwa);
-    enum OPTYPE { OP_SET, OP_ADD, OP_SUB, OP_MUL, OP_DIV, OP_PRINT, OP_IF, OP_WHILE };
-    struct E_STRUCT {
+    void yyerror(char*);
+    int yylex();
+    int liczbaZmiennych = 0;
+    std::vector<std::string> zmienne;
+    std::vector<int> wartosci;
+    int indeksZmiennej(char* nazwa);
+    enum OPTYPE
+    {
+        OP_SET,
+        OP_ADD,
+        OP_SUB,
+        OP_MUL,
+        OP_DIV,
+        OP_PRINT,
+        OP_IF,
+        OP_WHILE
+    };
+    struct E_STRUCT
+    {
         enum OPTYPE optype;
         int isArg1Str;
         int isArg1E;
         int isArg2Str;
         int intArg1;
         int intArg2;
-        struct E_STRUCT * eArg1 = nullptr;
-        char * strArg1;
-        char * strArg2;
+        struct E_STRUCT* eArg1 = nullptr;
+        char* strArg1;
+        char* strArg2;
         int solution;
-        char * solutionStr;
+        char* solutionStr;
         int hasSolution;
         bool isValue = false;
-        void recalculate() {
+        void recalculate()
+        {
             this->hasSolution = 0;
-            if(this->eArg1) {
+            if (this->eArg1)
+            {
                 this->eArg1->recalculate();
             }
         }
     };
-    class OPERATION {
-        public:
+    class OPERATION
+    {
+    public:
         enum OPTYPE optype;
-        struct E_STRUCT * e;
-        char * dest;
-        OPERATION * toRunIfTrue;
-        OPERATION * toRunIfTrue2;
+        struct E_STRUCT* e;
+        char* dest;
+        OPERATION* toRunIfTrue;
+        OPERATION* toRunIfTrue2;
         bool runMe;
         std::string cond;
-        struct E_STRUCT * e2;
-        OPERATION (enum OPTYPE optype, E_STRUCT * e) {
+        struct E_STRUCT* e2;
+        OPERATION(enum OPTYPE optype, E_STRUCT* e)
+        {
             this->e = e;
             this->optype = optype;
             this->runMe = true;
         }
     };
-    std::vector<OPERATION *> opVec;
+    std::vector<OPERATION*> opVec;
     int opVecSize = 0;
-    void addOP(OPERATION * op) {
+    void addOP(OPERATION* op)
+    {
         opVec.push_back(op);
     }
-int indeksZmiennej(char * nazwa)
-{
-    //printf("Szukanie zmiennej %s\n", nazwa);
-	for(int i = 0; i<liczbaZmiennych; i++)
-	{
-		if(std::string(nazwa) == zmienne[i]) {
-            //printf("Mam cie\n");
-            return i;
+    int indeksZmiennej(char* nazwa)
+    {
+        // printf("Szukanie zmiennej %s\n", nazwa);
+        for (int i = 0; i < liczbaZmiennych; i++)
+        {
+            if (std::string(nazwa) == zmienne[i])
+            {
+                return i;
+            }
         }
-	}
-    //printf("Ni mom cie\n");
-	return -1;
-}
-void setVariable(char* name, int val) {
-    		if(indeksZmiennej(name)>=0)
-			{
-				printf("zmienna %s istnieje, przypisano do niej wartosc %d\n",name,val);
-				wartosci[indeksZmiennej(name)] = val;
-			}
-			else
-			{
-				printf("zmienna %s nie istnieje, utworzono ja i przypisano do niej wartosc %d\n",name,val);
-                zmienne.push_back(std::string(name));
-                wartosci.push_back(val);
-				liczbaZmiennych += 1;
-			}
-}
+        return -1;
+    }
+    void setVariable(char* name, int val)
+    {
+        if (indeksZmiennej(name) >= 0)
+        {
+            printf("zmienna %s istnieje, przypisano do niej wartosc %d\n", name, val);
+            wartosci[indeksZmiennej(name)] = val;
+        }
+        else
+        {
+            printf(
+                "zmienna %s nie istnieje, utworzono ja i przypisano do niej wartosc %d\n", name, val);
+            zmienne.push_back(std::string(name));
+            wartosci.push_back(val);
+            liczbaZmiennych += 1;
+        }
+    }
 
-struct E_STRUCT * createE_IntStr(int arg1, enum OPTYPE optype, char * arg2) {
-        struct E_STRUCT * e = new E_STRUCT();
+    struct E_STRUCT* createE_IntStr(int arg1, enum OPTYPE optype, char* arg2)
+    {
+        struct E_STRUCT* e = new E_STRUCT();
         e->isArg1Str = 0;
         e->isArg2Str = 1;
         e->intArg1 = arg1;
@@ -92,9 +110,10 @@ struct E_STRUCT * createE_IntStr(int arg1, enum OPTYPE optype, char * arg2) {
         e->hasSolution = 0;
         e->solutionStr = 0;
         return e;
-}
-struct E_STRUCT * createE_StrInt(char * arg1, enum OPTYPE optype, int arg2) {
-        struct E_STRUCT * e = new E_STRUCT();
+    }
+    struct E_STRUCT* createE_StrInt(char* arg1, enum OPTYPE optype, int arg2)
+    {
+        struct E_STRUCT* e = new E_STRUCT();
         e->isArg1Str = 1;
         e->isArg2Str = 0;
         e->strArg1 = arg1;
@@ -103,9 +122,10 @@ struct E_STRUCT * createE_StrInt(char * arg1, enum OPTYPE optype, int arg2) {
         e->hasSolution = 0;
         e->solutionStr = 0;
         return e;
-}
-struct E_STRUCT * createE_StrStr(char * arg1, enum OPTYPE optype, char * arg2) {
-        struct E_STRUCT * e = new E_STRUCT();
+    }
+    struct E_STRUCT* createE_StrStr(char* arg1, enum OPTYPE optype, char* arg2)
+    {
+        struct E_STRUCT* e = new E_STRUCT();
         e->isArg1Str = 1;
         e->isArg2Str = 1;
         e->strArg1 = arg1;
@@ -114,9 +134,10 @@ struct E_STRUCT * createE_StrStr(char * arg1, enum OPTYPE optype, char * arg2) {
         e->hasSolution = 0;
         e->solutionStr = 0;
         return e;
-}
-struct E_STRUCT * createE_EStr(struct E_STRUCT * arg1, enum OPTYPE optype, char * arg2) {
-        struct E_STRUCT * e = new E_STRUCT();
+    }
+    struct E_STRUCT* createE_EStr(struct E_STRUCT* arg1, enum OPTYPE optype, char* arg2)
+    {
+        struct E_STRUCT* e = new E_STRUCT();
         e->isArg1Str = 0;
         e->isArg1E = 1;
         e->isArg2Str = 1;
@@ -126,9 +147,10 @@ struct E_STRUCT * createE_EStr(struct E_STRUCT * arg1, enum OPTYPE optype, char 
         e->hasSolution = 0;
         e->solutionStr = 0;
         return e;
-}
-struct E_STRUCT * createE_EInt(struct E_STRUCT * arg1, enum OPTYPE optype, int arg2) {
-        struct E_STRUCT * e = new E_STRUCT();
+    }
+    struct E_STRUCT* createE_EInt(struct E_STRUCT* arg1, enum OPTYPE optype, int arg2)
+    {
+        struct E_STRUCT* e = new E_STRUCT();
         e->isArg1Str = 0;
         e->isArg1E = 1;
         e->isArg2Str = 0;
@@ -138,9 +160,10 @@ struct E_STRUCT * createE_EInt(struct E_STRUCT * arg1, enum OPTYPE optype, int a
         e->hasSolution = 0;
         e->solutionStr = 0;
         return e;
-}
-struct E_STRUCT * createE_SolutionInt(int arg1) {
-        struct E_STRUCT * e = new E_STRUCT();
+    }
+    struct E_STRUCT* createE_SolutionInt(int arg1)
+    {
+        struct E_STRUCT* e = new E_STRUCT();
         e->isArg1Str = 0;
         e->isArg1E = 0;
         e->isArg2Str = 0;
@@ -150,150 +173,213 @@ struct E_STRUCT * createE_SolutionInt(int arg1) {
         e->hasSolution = 1;
         e->solutionStr = 0;
         return e;
-}
-struct E_STRUCT * createE_SolutionStr(char * arg1) {
-        struct E_STRUCT * e = new E_STRUCT();
+    }
+    struct E_STRUCT* createE_SolutionStr(char* arg1)
+    {
+        struct E_STRUCT* e = new E_STRUCT();
         e->isArg1Str = 0;
         e->isArg1E = 0;
         e->isArg2Str = 0;
         e->solutionStr = arg1;
         e->hasSolution = 0;
         return e;
-}
-int doIntIntMath(int arg1, int arg2, enum OPTYPE optype) {
-    switch(optype) {
-        case OP_ADD: {
-            return arg1 + arg2;
-            break;
-        }
-        case OP_SUB: {
-            return arg1 - arg2;
-            break;
-        }
-        case OP_DIV: {
-            return arg1 / arg2;
-            break;
-        }
-        case OP_MUL: {
-            return arg1 * arg2;
-            break;
-        }
     }
-    return 0;
-}
-int resolveE(struct E_STRUCT * arg) {
-    if(arg->hasSolution) {
+    int doIntIntMath(int arg1, int arg2, enum OPTYPE optype)
+    {
+        switch (optype)
+        {
+            case OP_ADD:
+            {
+                return arg1 + arg2;
+                break;
+            }
+            case OP_SUB:
+            {
+                return arg1 - arg2;
+                break;
+            }
+            case OP_DIV:
+            {
+                return arg1 / arg2;
+                break;
+            }
+            case OP_MUL:
+            {
+                return arg1 * arg2;
+                break;
+            }
+        }
+        return 0;
+    }
+    int resolveE(struct E_STRUCT* arg)
+    {
+        if (arg->hasSolution)
+        {
+            return arg->solution;
+        }
+        if (arg->isValue)
+        {
+            arg->solution = arg->intArg1;
+            arg->hasSolution = 1;
+            return arg->intArg1;
+        }
+        if (arg->solutionStr != 0)
+        {
+            int varValue = wartosci[indeksZmiennej(arg->solutionStr)];
+            arg->solution = varValue;
+            arg->hasSolution = 1;
+            return varValue;
+        }
+        int arg1Val = 0;
+        int arg2Val = 0;
+        if (arg->isArg1E)
+        {
+            arg1Val = resolveE(arg->eArg1);
+        }
+        else if (arg->isArg1Str)
+        {
+            arg1Val = wartosci[indeksZmiennej(arg->strArg1)];
+        }
+        else
+        {
+            arg1Val = arg->intArg1;
+        }
+        if (arg->isArg2Str)
+        {
+            arg2Val = wartosci[indeksZmiennej(arg->strArg2)];
+        }
+        else
+        {
+            arg2Val = arg->intArg2;
+        }
+        arg->solution = doIntIntMath(arg1Val, arg2Val, arg->optype);
+        arg->hasSolution = 1;
         return arg->solution;
     }
-    if(arg->isValue) {
-        arg->solution = arg->intArg1;
-        arg->hasSolution = 1;
-        return arg->intArg1;
-    }
-    if(arg->solutionStr != 0) {
-        int varValue = wartosci[indeksZmiennej(arg->solutionStr)];
-        arg->solution = varValue;
-        arg->hasSolution = 1;
-        return varValue;
-    }
-    int arg1Val = 0;
-    int arg2Val = 0;
-    if(arg->isArg1E) {
-        arg1Val = resolveE(arg->eArg1);
-    } else if(arg->isArg1Str) {
-        arg1Val = wartosci[indeksZmiennej(arg->strArg1)];
-    } else {
-        arg1Val = arg->intArg1;
-    }
-    if(arg->isArg2Str) {
-        arg2Val = wartosci[indeksZmiennej(arg->strArg2)];
-    } else {
-        arg2Val = arg->intArg2;
-    }
-    arg->solution = doIntIntMath(arg1Val, arg2Val, arg->optype);
-    arg->hasSolution = 1;
-    return arg->solution;
-}
-void processInstruction(OPERATION * op) {
-    op->e->recalculate();
-    switch(op->optype) {
-        case OP_SET: {
-            setVariable(op->dest, resolveE(op->e));
-            break;
-        }
-        case OP_PRINT: {
-            printf("PRINT: %d\n", resolveE(op->e));
-            break;
-        }
-        case OP_IF: {
-            int e1 = resolveE(op->e);
-            int e2 = resolveE(op->e2);
-            bool run = false;
-            if(op->cond == ">") {
-                if(e1>e2)
-                    run = true;
-            } else if(op->cond == "<") {
-                if(e1<e2)
-                    run = true;
-            } else if(op->cond == "==") {
-                if(e1==e2)
-                    run = true;
-            } else if(op->cond == ">=") {
-                if(e1>=e2)
-                    run = true;
-            } else if(op->cond == "<=") {
-                if(e1<=e2)
-                    run = true;
-            } 
-            std::cout<<"IF: "<<(run ? "true, wykonujemy instrukcje" : "false, nie wykonujemy instrukcji")<<"\n";
-            if(run) {
-                processInstruction(op->toRunIfTrue);
+    void processInstruction(OPERATION* op)
+    {
+        op->e->recalculate();
+        switch (op->optype)
+        {
+            case OP_SET:
+            {
+                setVariable(op->dest, resolveE(op->e));
+                break;
             }
-            break;
-        }
-        case OP_WHILE: {
-            bool run = true;
-            while(run) {
-                op->e->recalculate();
-                op->e2->recalculate();
+            case OP_PRINT:
+            {
+                printf("PRINT: %d\n", resolveE(op->e));
+                break;
+            }
+            case OP_IF:
+            {
                 int e1 = resolveE(op->e);
                 int e2 = resolveE(op->e2);
-                run = false;
-                if(op->cond == ">") {
-                    if(e1>e2)
+                bool run = false;
+                if (op->cond == ">")
+                {
+                    if (e1 > e2)
                         run = true;
-                } else if(op->cond == "<") {
-                    if(e1<e2)
-                        run = true;
-                } else if(op->cond == "==") {
-                    if(e1==e2)
-                        run = true;
-                } else if(op->cond == ">=") {
-                    if(e1>=e2)
-                        run = true;
-                } else if(op->cond == "<=") {
-                    if(e1<=e2)
-                        run = true;
-                } 
-                std::cout<<"WHILE: "<<(run ? "true, wykonujemy instrukcje" : "false, nie wykonujemy instrukcji")<<"\n";
-                if(run) {
-                    processInstruction(op->toRunIfTrue);
-                    processInstruction(op->toRunIfTrue2);
                 }
+                else if (op->cond == "<")
+                {
+                    if (e1 < e2)
+                        run = true;
+                }
+                else if (op->cond == "==")
+                {
+                    if (e1 == e2)
+                        run = true;
+                }
+                else if (op->cond == "!=")
+                {
+                    if (e1 != e2)
+                        run = true;
+                }
+                else if (op->cond == ">=")
+                {
+                    if (e1 >= e2)
+                        run = true;
+                }
+                else if (op->cond == "<=")
+                {
+                    if (e1 <= e2)
+                        run = true;
+                }
+                std::cout << "IF: "
+                        << (run ? "true, wykonujemy instrukcje" : "false, nie wykonujemy instrukcji")
+                        << "\n";
+                if (run)
+                {
+                    processInstruction(op->toRunIfTrue);
+                }
+                break;
             }
-            break;
+            case OP_WHILE:
+            {
+                bool run = true;
+                while (run)
+                {
+                    op->e->recalculate();
+                    op->e2->recalculate();
+                    int e1 = resolveE(op->e);
+                    int e2 = resolveE(op->e2);
+                    run = false;
+                    if (op->cond == ">")
+                    {
+                        if (e1 > e2)
+                            run = true;
+                    }
+                    else if (op->cond == "<")
+                    {
+                        if (e1 < e2)
+                            run = true;
+                    }
+                    else if (op->cond == "==")
+                    {
+                        if (e1 == e2)
+                            run = true;
+                    }
+                    else if (op->cond == "!=")
+                    {
+                        if (e1 != e2)
+                            run = true;
+                    }
+                    else if (op->cond == ">=")
+                    {
+                        if (e1 >= e2)
+                            run = true;
+                    }
+                    else if (op->cond == "<=")
+                    {
+                        if (e1 <= e2)
+                            run = true;
+                    }
+                    std::cout << "WHILE: " << (run ? "true, wykonujemy instrukcje"
+                                                : "false, nie wykonujemy instrukcji")
+                            << "\n";
+                    if (run)
+                    {
+                        processInstruction(op->toRunIfTrue);
+                        processInstruction(op->toRunIfTrue2);
+                    }
+                }
+                break;
+            }
         }
     }
-}
-void processOperations() {
-    for(int i = 0; i < opVec.size(); i++) {
-        if(opVec[i]->runMe) {
-            printf("Instrukcja %d\n", i);
-            OPERATION * op = opVec[i];
-            processInstruction(op);
+    void processOperations()
+    {
+        for (int i = 0; i < opVec.size(); i++)
+        {
+            if (opVec[i]->runMe)
+            {
+                printf("Instrukcja %d\n", i);
+                OPERATION* op = opVec[i];
+                processInstruction(op);
+            }
         }
     }
-}
 %}
 
 %union {

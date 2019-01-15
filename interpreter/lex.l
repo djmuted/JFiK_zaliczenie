@@ -11,7 +11,7 @@ int yywrap();
 "IF" return IF;
 "++" return INCREMENT;
 "--" return DECREMENT;
-(<=|>=|==|>|<) { 
+(<=|>=|==|!=|>|<) { 
 	yylval.vName = (char*)malloc(strlen(yytext));
     strcpy (yylval.vName, yytext);
 	return COND;
